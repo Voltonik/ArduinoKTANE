@@ -1,18 +1,20 @@
-#include "modules/base/BaseModule.h"
-#include "modules/controller/ControllerModule.h"
-#include "modules/wire/WireModule.h"
+#include "src/modules/base/BaseModule.h"
+#include "src/modules/controller/ControllerModule.h"
+#include "src/modules/wire/WireModule.h"
+
+ControllerModule controllerModule = ControllerModule(5 * (60 * 1000));
 
 BaseModule modules[5] = {
-	ControllerModule(),
-	WireModule(),
-	WireModule(),
-	WireModule(),
-	WireModule(),
+	controllerModule,
+	WireModule(&controllerModule),
+	WireModule(&controllerModule),
+	WireModule(&controllerModule),
+	WireModule(&controllerModule),
 };
 
 void setup() {
 	Serial.begin(9600);
-	
+
 	for (BaseModule module : modules) {
 		module.Start();
 	}
@@ -20,6 +22,7 @@ void setup() {
 
 void loop() {
 	for (BaseModule module : modules) {
-		module.Update();
+		if (module.running)
+			module.Update();
 	}
 }
