@@ -15,4 +15,22 @@ void AbstractControllerModule::Update() {
 	AbstractModule::Update();
 
 	currentTime = explodeTime - millis();
+
+	if (currentTime <= 0)
+		Lose();
+}
+
+void AbstractControllerModule::Strike() {
+	strikes++;
+
+	if (strikes > maxStrikes)
+		Lose();
+}
+
+void AbstractControllerModule::Lose() {
+	running = false;
+}
+
+void AbstractControllerModule::Win() {
+	running = false;
 }

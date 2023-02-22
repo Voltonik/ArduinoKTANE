@@ -17,5 +17,5 @@ void BaseModule::Complete() {
 }
 
 void BaseModule::Fail() {
-	controllerModule->strikes++;
+	controllerModule->Strike();
 }

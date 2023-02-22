@@ -8,8 +8,10 @@ void ControllerModule::Start() {
 	AbstractControllerModule::Start();
 
 	display.begin();
-
 	display.setContrast(35);
+
+	pinMode(backlight, OUTPUT);
+	analogWrite(backlight, 160);
 }
 
 char* TimeToString(unsigned long t) {
@@ -21,27 +23,44 @@ char* TimeToString(unsigned long t) {
 	return str;
 }
 
-void ControllerModule::Fail() {
-
+void ControllerModule::Strike() {
+	AbstractControllerModule::Strike();
 }
 
-void ControllerModule::Complete() {
-
+void ControllerModule::Lose() {
+	AbstractControllerModule::Lose();
 }
+
+void ControllerModule::Win() {
+	AbstractControllerModule::Win();
+}
+
+long blink;
+bool state;
 
 void ControllerModule::Update() {
 	AbstractControllerModule::Update();
-
-	if (currentTime <= 0 || strikes > maxStrikes) {
-		running = false;
-		Fail();
-	}
 
 	unsigned long seconds = currentTime / 1000;
 	unsigned long minutes = seconds / 60;
 
 	seconds %= 60;
 	minutes %= 60;
+
+	unsigned long time = millis();
+
+	if (currentTime < 30000) {
+		if (time - blink >= 500) {
+			blink = time;
+
+			if (state)
+				analogWrite(backlight, 160);
+			else
+				analogWrite(backlight, 0);
+
+			state = !state;
+		}
+	}
 
 	display.clearDisplay();
 

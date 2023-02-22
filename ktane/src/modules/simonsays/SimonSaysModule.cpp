@@ -6,18 +6,9 @@ SimonSaysModule::SimonSaysModule(AbstractControllerModule* controllerModule): Ba
 
 void SimonSaysModule::Start() {
 	BaseModule::Start();
-
 }
 
 
 void SimonSaysModule::Update() {
 	BaseModule::Update();
-
-	if (Serial.available() > 0) {
-		String data = Serial.readString();
-
-		if (data == "fail") {
-			Fail();
-		}
-	}
 }

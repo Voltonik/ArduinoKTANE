@@ -8,8 +8,8 @@ ControllerModule* controllerModule = new ControllerModule(300000, 2);
 
 AbstractModule** modules = new AbstractModule * [5] {
 	controllerModule,
-		new WiresModule(controllerModule),
-		new WiresModule(controllerModule),
+		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Black, Black, Blue, White }),
+		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Red, Red, Black, Red }),
 		new SimonSaysModule(controllerModule),
 		new SymbolsModule(controllerModule)
 };

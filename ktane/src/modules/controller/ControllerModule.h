@@ -6,6 +6,7 @@
 class ControllerModule: public AbstractControllerModule {
 private:
 	Adafruit_PCD8544 display = Adafruit_PCD8544(13, 11, 8, 7, 9);
+	int backlight = 10;
 
 public:
 	ControllerModule(long explodeTime, uint8_t maxStrikes);
@@ -13,6 +14,7 @@ public:
 	void Start();
 	void Update();
 
-	void Fail();
-	void Complete();
+	void Strike();
+	void Lose();
+	void Win();
 };
