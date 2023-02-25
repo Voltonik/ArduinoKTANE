@@ -1,11 +1,12 @@
 #include "BaseModule.h"
 
-BaseModule::BaseModule(AbstractControllerModule* controllerModule) {
+BaseModule::BaseModule(AbstractControllerModule* controllerModule, int statusLED) {
 	this->controllerModule = controllerModule;
 }
 
 void BaseModule::Start() {
 	AbstractModule::Start();
+
 }
 
 void BaseModule::Update() {
@@ -13,9 +14,11 @@ void BaseModule::Update() {
 }
 
 void BaseModule::Complete() {
-
+	running = false;
 }
 
 void BaseModule::Fail() {
-	controllerModule->Strike();
+	Serial.println("fail");
+	controllerModule->strikes++;
+	tone(controllerModule->speaker, NOTE_G3, 200);
 }

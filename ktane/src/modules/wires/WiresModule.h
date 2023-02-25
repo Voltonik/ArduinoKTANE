@@ -1,32 +1,16 @@
 #include "../base/BaseModule.h"
-
-enum Color {
-	Yellow,
-	White,
-	Red,
-	Blue,
-	Black,
-	Green
-};
-
-struct ConnectedWire {
-	int pin;
-	bool connected;
-	Color color;
-
-	ConnectedWire(int _pin = A0) {
-		pin = _pin;
-	}
-};
+#include "structs.h"
 
 class WiresModule: public BaseModule {
 private:
-	ConnectedWire wires[6] = { ConnectedWire(A0), ConnectedWire(A1), ConnectedWire(A2), ConnectedWire(A3), ConnectedWire(A4), ConnectedWire(A5) };
-	Color colors[6];
+	ConnectedWire wires[4] = { ConnectedWire(53), ConnectedWire(52), ConnectedWire(51), ConnectedWire(50) };
+	Color colors[4];
 	ConnectedWire wireToCut;
 
+	int GetWireToCut(Color colors[4]);
+	bool contains(ConnectedWire wires[4], ConnectedWire item);
 public:
-	WiresModule(AbstractControllerModule* controllerModule, Color colors[6]);
+	WiresModule(AbstractControllerModule* controllerModule, int statusLED, Color colors[4]);
 
 	void Start();
 	void Update();

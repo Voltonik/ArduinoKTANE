@@ -1,72 +1,37 @@
-#include "EEPROM.h"
-
 #include "src/modules/base/AbstractModule.h"
-#include "src/modules/controller/ControllerModule.h"
+#include "src/modules/base/AbstractControllerModule.h"
 #include "src/modules/wires/WiresModule.h"
+#include "src/modules/wires/WiresModule2.h"
 #include "src/modules/simonsays/SimonSaysModule.h"
 #include "src/modules/symbols/SymbolsModule.h"
 
-#include "src/Configuration.h"
+AbstractControllerModule* controllerModule = new AbstractControllerModule(300000, 2);
 
-ControllerModule* controllerModule = new ControllerModule(300000, 2);
-
-Configuration configs[5]{
-	Configuration(new AbstractModule * [5] {
-		controllerModule,
-		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Black, Black, Blue, White }),
-		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Red, Red, Black, Red }),
-		new SimonSaysModule(controllerModule),
-		new SymbolsModule(controllerModule)
-	}),
-	Configuration(new AbstractModule * [5] {
-		controllerModule,
-		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Black, Black, Blue, White }),
-		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Red, Red, Black, Red }),
-		new SimonSaysModule(controllerModule),
-		new SymbolsModule(controllerModule)
-	}),
-	Configuration(new AbstractModule * [5] {
-		controllerModule,
-		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Black, Black, Blue, White }),
-		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Red, Red, Black, Red }),
-		new SimonSaysModule(controllerModule),
-		new SymbolsModule(controllerModule)
-	}),
-	Configuration(new AbstractModule * [5] {
-		controllerModule,
-		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Black, Black, Blue, White }),
-		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Red, Red, Black, Red }),
-		new SimonSaysModule(controllerModule),
-		new SymbolsModule(controllerModule)
-	}),
-	Configuration(new AbstractModule * [5] {
-		controllerModule,
-		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Black, Black, Blue, White }),
-		new WiresModule(controllerModule, new Color[6]{ Yellow, Yellow, Red, Red, Black, Red }),
-		new SimonSaysModule(controllerModule),
-		new SymbolsModule(controllerModule)
-	})
-};
-
-Configuration currentConfig;
-
-
-void(*resetArduino) (void) = 0;
-
-void LoadConfig(int config) {
-	EEPROM.write(0, config);
-
-	resetArduino();
-}
+WiresModule wiresModule1 = WiresModule(controllerModule, 40, new Color[6]{ Color::Yellow, Color::Yellow, Color::Black, Color::Black, Color::Blue, Color::White });
+WiresModule2 wiresModule2 = WiresModule2(controllerModule, 41, new Color[3]{ Color::Yellow, Color::Black, Color::White });
+SimonSaysModule simonSaysModule = SimonSaysModule(controllerModule, 42);
+// SymbolsModule symbolsModule = SymbolsModule(controllerModule, 43, new Symbols[4]{ Phi, bT, RightC, Three });
 
 void setup() {
 	Serial.begin(9600);
 
-	currentConfig = configs[EEPROM.read(0)];
-
-	currentConfig.Start();
+	controllerModule->Start();
+	wiresModule1.Start();
+	wiresModule2.Start();
+	simonSaysModule.Start();
+	// symbolsModule.Start();
 }
 
 void loop() {
-	currentConfig.Update();
+	if (controllerModule->running) {
+		controllerModule->Update();
+		if (wiresModule1.running)
+			wiresModule1.Update();
+		if (wiresModule2.running)
+			wiresModule2.Update();
+		if (simonSaysModule.running)
+			simonSaysModule.Update();
+		// if (symbolsModule.running)
+		// 	symbolsModule.Update();
+	}
 }

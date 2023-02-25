@@ -1,18 +1,17 @@
 #pragma once
-#include "AbstractControllerModule.h"
+#include "AbstractcontrollerModule.h"
 #include "AbstractModule.h"
 
 class BaseModule: public AbstractModule {
-private:
 protected:
 	AbstractControllerModule* controllerModule;
 
 public:
-	BaseModule(AbstractControllerModule* controllerModule);
+	BaseModule(AbstractControllerModule* controllerModule, int statusLED);
 
 	virtual void Start();
 	virtual void Update();
 
 	virtual void Complete();
-	void Fail();
+	virtual void Fail();
 };

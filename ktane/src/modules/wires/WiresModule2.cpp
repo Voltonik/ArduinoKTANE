@@ -1,11 +1,11 @@
-#include "WiresModule.h"
+#include "WiresModule2.h"
 
-int WiresModule::GetWireToCut(Color colors[4]) {
+int WiresModule2::GetWireToCut(Color colors[3]) {
 	int yellowCount = 0;
 	int whiteCount = 0;
 	int redCount = 0;
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 3; i++) {
 		if (colors[i] == Yellow)
 			yellowCount++;
 		else if (colors[i] == White)
@@ -26,24 +26,24 @@ int WiresModule::GetWireToCut(Color colors[4]) {
 	return 4;
 }
 
-WiresModule::WiresModule(AbstractControllerModule* controllerModule, int statusLED, Color colors[4]): BaseModule(controllerModule, statusLED) {
-	for (int i = 0; i < 4; i++)
+WiresModule2::WiresModule2(AbstractControllerModule* controllerModule, int statusLED, Color colors[3]): BaseModule(controllerModule, statusLED) {
+	for (int i = 0; i < 3; i++)
 		this->colors[i] = colors[i];
 
-	wireToCut = wires[3];
+	wireToCut = wires[1];
 }
 
-void WiresModule::Start() {
+void WiresModule2::Start() {
 	BaseModule::Start();
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 3; i++) {
 		pinMode(wires[i].pin, INPUT_PULLUP);
 		wires[i].color = colors[i];
 	}
 }
 
-bool WiresModule::contains(ConnectedWire wires[4], ConnectedWire item) {
-	for (int i = 0; i < 4; i++) {
+bool WiresModule2::contains(ConnectedWire wires[3], ConnectedWire item) {
+	for (int i = 0; i < 3; i++) {
 		if (wires[i].pin == item.pin) {
 			return true;
 		}
@@ -51,14 +51,14 @@ bool WiresModule::contains(ConnectedWire wires[4], ConnectedWire item) {
 	return false;
 }
 
-void WiresModule::Update() {
+void WiresModule2::Update() {
 	BaseModule::Update();
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 3; i++) {
 		if (digitalRead(wires[i].pin) == HIGH) {
-			if (wires[i].pin == wireToCut.pin) {
+			if (wires[i].pin == wireToCut.pin)
 				Complete();
-			} else {
+			else {
 				controllerModule->Lose();
 			}
 		}
